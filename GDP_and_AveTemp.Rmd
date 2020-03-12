@@ -69,3 +69,8 @@ GDPandWeather <- dat_to_merge%>% left_join(temps_to_join, by= "Country")
 GDPandWeather
 ```
 
+```{r}
+?tidyverse
+# learning push requests in r
+```
+
