@@ -1,0 +1,41 @@
+---
+title: "Coronovirus_FinalProject"
+output: html_notebook
+---
+
+Population
+GDP
+Avg Temperature
+
+```{r}
+virus = read_csv("covid_19_clean_complete.csv")
+
+#US_virus is the data with the cruise ships filtered out and sums up all the cases in each county and combines them into a total number of cases grouped by date
+#No_US_virus is the data without the US and is just for all the other countries
+#country_virus is the final dataset grouped by country
+
+#NEED TO FILTER CHINA AND AUSTRALIA
+
+#US_virus = virus %>% filter(Country_Region == "US") %>% filter(Province_State != "Grand Princess Cruise Ship",Province_State != "Omaha, NE (From Diamond Princess)",Province_State != "Travis, CA (From Diamond Princess)",Province_State != "Lackland, TX (From Diamond Princess)",Province_State != "Unassigned Location (From Diamond Princess)") %>% group_by(Date) %>% summarize(Confirmed = sum(Confirmed),Deaths = sum(Deaths), Recovered = sum(Recovered)) %>% mutate("Province_State" = "US", "Country_Region" = "US") #OLD DATSET CODE; new dataset broken into cities and countries
+
+US_virus = virus %>% filter(Country_Region == "US" & Date == "1/22/20")%>% separate(col = Province_State, into = c("City_or_County","State"),sep = ",") %>% filter(is.na(State)== T)
+
+No_US_virus = virus %>% filter(Country_Region != "US")
+
+country_virus = full_join(No_US_virus, US_virus)
+
+#For China
+China_virus = virus %>% filter(Country_Region == "China") %>% group_by(Date) %>% summarize(Confirmed = sum(Confirmed),Deaths = sum(Deaths), Recovered = sum(Recovered)) %>% mutate("Province_State" = "China", "Country_Region" = "China")
+No_China_virus = virus %>% filter(Country_Region != "China")
+country_virus1 = full_join(No_China_virus, China_virus)
+
+#For Australia
+Australia_virus = virus %>% filter(Country_Region == "Australia")%>% group_by(Date) %>% summarize(Confirmed = sum(Confirmed),Deaths = sum(Deaths), Recovered = sum(Recovered)) %>% mutate("Province_State" = "Australia", "Country_Region" = "Australia")
+No_Australia_virus = virus %>% filter(Country_Region != "Australia")
+country_virus2 = full_join(No_Australia_virus, Australia_virus)
+
+predata = full_join(country_virus,country_virus1)
+mydata = full_join(predata,country_virus2)
+mydata %>% filter(Country_Region == "Australia")
+```
+
