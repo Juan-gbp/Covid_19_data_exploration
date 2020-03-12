@@ -1,0 +1,71 @@
+---
+title: "Project"
+output: html_notebook
+---
+
+
+```{r}
+library(WDI)
+library(tidyverse)
+library(countrycode)
+```
+```{r}
+setwd("~/Downloads")
+Covid19 <- read_csv("covid_19_clean_complete.csv")
+Covid19%>%distinct(`Country/Region`)
+```
+
+```{r}
+dat = WDI(indicator='NY.GDP.PCAP.KD', country=c('MX','CA','US'), start=1960, end=2012)
+```
+
+```{r}
+countries <- Covid19%>%
+  select(`Country/Region`)%>%
+  distinct()%>%
+  arrange(`Country/Region`)
+
+  names= countrycode(names(table(countries)), origin = 'country.name', destination = 'iso3c')
+
+
+```
+
+
+
+
+```{r}
+dat = WDI(indicator='NY.GDP.PCAP.KD', country=names, start=2018, end=2018)
+dat
+```
+```{r}
+library(countrycode)
+
+```
+
+```{r}
+dat_to_merge <-dat%>%
+  mutate(
+    Country = country
+  )%>%
+  select(
+    -country
+  )%>%
+  arrange(Country)
+```
+
+```{r}
+globalTemperature <- read_csv("GlobalLandTemperaturesByCountry.csv", skip_empty_rows = TRUE)
+temps_to_join <- globalTemperature%>%
+group_by(Country)%>%
+  summarise(country_ave_temp = mean(AverageTemperature, na.rm = TRUE))
+temps_to_join
+```
+
+```{r}
+GDPandWeather <- dat_to_merge%>% left_join(temps_to_join, by= "Country")
+```
+
+```{r}
+GDPandWeather
+```
+
