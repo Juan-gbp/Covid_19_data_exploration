@@ -10,7 +10,7 @@ library(tidyverse)
 library(countrycode)
 ```
 ```{r}
-setwd("~/Downloads")
+setwd("/Volumes/GoogleDrive/My Drive/Steven/Spring Senior/Data Science/Stats_Project")
 Covid19 <- read_csv("covid_19_clean_complete.csv")
 Covid19%>%distinct(`Country/Region`)
 ```
@@ -21,9 +21,9 @@ dat = WDI(indicator='NY.GDP.PCAP.KD', country=c('MX','CA','US'), start=1960, end
 
 ```{r}
 countries <- Covid19%>%
-  select(`Country/Region`)%>%
+  select(`Country_Region`)%>%
   distinct()%>%
-  arrange(`Country/Region`)
+  arrange(`Country_Region`)
 
   names= countrycode(names(table(countries)), origin = 'country.name', destination = 'iso3c')
 
@@ -69,8 +69,12 @@ GDPandWeather <- dat_to_merge%>% left_join(temps_to_join, by= "Country")
 GDPandWeather
 ```
 
+
+```{r}
+write_csv(GDPandWeather,"GDPandTemp.csv")
+```
+
 ```{r}
 ?tidyverse
 # learning push requests in r
 ```
-
