@@ -44,7 +44,12 @@ mydata
 GDPandWeather = GDPandWeather %>% rename("Country_Region"= Country)
 GDPandWeather
 partialdata = left_join(mydata,GDPandWeather,by = "Country_Region")
-partialdata %>% filter(Country_Region== "Thailand")
+country_population_2 = country_population_1 %>% rename("Country_Region"= Country)
+ourfinaldata = left_join(partialdata,country_population_2, by = "Country_Region")
 
+```
+
+```{r}
+write_csv(ourfinaldata, "ourfinaldata.csv")
 ```
 
