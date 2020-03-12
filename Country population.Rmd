@@ -1,0 +1,18 @@
+---
+title: "Country population"
+output: html_notebook
+---
+
+ 
+
+```{r}
+library(tidyverse)
+setwd("~/Desktop/Intro Data Science/DS project")
+
+country_population <- read_csv("population_by_country_2020.csv")
+
+country_population_1 <- country_population %>% select(Country, Population_2020)
+View(country_population_1)
+```
+
+
