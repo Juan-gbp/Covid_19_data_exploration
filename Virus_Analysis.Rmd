@@ -36,6 +36,15 @@ country_virus2 = full_join(No_Australia_virus, Australia_virus)
 
 predata = full_join(country_virus,country_virus1)
 mydata = full_join(predata,country_virus2)
-mydata %>% filter(Country_Region == "Switzerland")
+#mydata %>% filter(Country_Region == "Switzerland")
+```
+
+```{r}
+mydata
+GDPandWeather = GDPandWeather %>% rename("Country_Region"= Country)
+GDPandWeather
+partialdata = left_join(mydata,GDPandWeather,by = "Country_Region")
+partialdata %>% filter(Country_Region== "Thailand")
+
 ```
 
