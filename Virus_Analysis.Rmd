@@ -8,7 +8,14 @@ GDP
 Avg Temperature
 
 ```{r}
+library(tidyverse)
+library(anchors)
+```
+
+The code in this chunk below sums up all the cases for countries that are broken into regions so we can have one value per row for those countries.  We had to do this for the US, China, and Australia.
+```{r}
 virus = read_csv("covid_19_clean_complete.csv")
+virus <- replace.value(virus,"Country_Region",from = "US",to = "United States") #Replacing value of US with value United States
 
 #US_virus is the data with the cruise ships filtered out and sums up all the cases in each county and combines them into a total number of cases grouped by date
 #No_US_virus is the data without the US and is just for all the other countries
@@ -41,13 +48,18 @@ mydata = full_join(predata,country_virus2)
 
 ```{r}
 mydata
-GDPandWeather = GDPandWeather %>% rename("Country_Region"= Country)
+#GDPandWeather = GDPandWeather %>% rename("Country_Region"= Country)
 GDPandWeather
 partialdata = left_join(mydata,GDPandWeather,by = "Country_Region")
 country_population_2 = country_population_1 %>% rename("Country_Region"= Country)
 ourfinaldata = left_join(partialdata,country_population_2, by = "Country_Region")
 
 ```
+
+```{r}
+ourfinaldata %>% filter(Country_Region == "Spain")
+```
+
 
 ```{r}
 write_csv(ourfinaldata, "ourfinaldata.csv")

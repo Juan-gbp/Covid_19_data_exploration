@@ -7,7 +7,7 @@ output: html_notebook
 
 ```{r}
 library(tidyverse)
-setwd("~/Desktop/Intro Data Science/DS project")
+setwd("/Volumes/GoogleDrive/My Drive/Steven/Spring Senior/Data Science/Stats_Project")
 
 country_population <- read_csv("population_by_country_2020.csv")
 
