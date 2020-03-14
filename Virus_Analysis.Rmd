@@ -57,7 +57,7 @@ ourfinaldata = left_join(partialdata,country_population_2, by = "Country_Region"
 ```
 
 ```{r}
-ourfinaldata %>% filter(Country_Region == "Spain")
+ourfinaldata %>% filter(Country_Region == "United States")
 ```
 
 
