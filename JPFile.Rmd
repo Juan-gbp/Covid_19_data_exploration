@@ -1,0 +1,12 @@
+---
+title: "JPFile"
+output: html_notebook
+---
+
+```{r}
+ourfinaldata = read_csv("ourfinaldata.csv")
+ourfinaldata$Date <-as.Date(ourfinaldata$Date, format = "%m/%d/%y")
+ourfinaldata
+```
+
+
