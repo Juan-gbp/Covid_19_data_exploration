@@ -59,7 +59,7 @@ ourfinaldata = left_join(partialdata,country_population_2, by = "Country_Region"
 
 Filter by the previous day to make sure we have the most recent data.
 ```{r}
-ourfinaldata %>% filter(Date == "3/13/20")
+ourfinaldata %>% filter(Date == "2020-03-14")
 ```
 
 
@@ -82,6 +82,8 @@ ourfinaldata %>% group_by(Date) %>% summarize(Total = sum(Confirmed), Dead_count
 #Deaths in China
 ourfinaldata %>% filter(Country_Region == "China") %>% group_by(Date) %>% summarize(Total = sum(Confirmed), Dead_count = sum(Deaths)) %>% ggplot() + geom_line(aes(x = Date, y = Total,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Dead_count,group =1), color = "red")+ ggtitle("China Cases and Deaths")
 
+ourfinaldata %>% filter(Country_Region == "China") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("China Cases and Deaths")
+
 #Deaths in United States
 ourfinaldata %>% filter(Country_Region == "United States") %>% group_by(Date) %>% summarize(Total = sum(Confirmed), Dead_count = sum(Deaths)) %>% ggplot() + geom_line(aes(x = Date, y = Total,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Dead_count,group =1), color = "red")+ ggtitle("USA Cases and Deaths")
 
@@ -94,6 +96,10 @@ ourfinaldata %>% filter(Country_Region == "Italy") %>% group_by(Date) %>% summar
 #Deaths in Spain
 ourfinaldata %>% filter(Country_Region == "Spain") %>% group_by(Date) %>% summarize(Total = sum(Confirmed), Dead_count = sum(Deaths)) %>% ggplot() + geom_line(aes(x = Date, y = Total,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Dead_count,group =1), color = "red")+ ggtitle("Spain Cases and Deaths")
 
+
+```
+
+```{r}
 #Deaths in Canada
 ourfinaldata %>% filter(Country_Region == "Canada") %>% group_by(Date) %>% summarize(Total = sum(Confirmed), Dead_count = sum(Deaths)) %>% ggplot() + geom_line(aes(x = Date, y = Total,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Dead_count,group =1), color = "red")+ ggtitle("Canada Cases and Deaths")
 
@@ -115,6 +121,7 @@ ourfinaldata %>% filter(Country_Region == "France") %>% group_by(Date) %>% summa
 #Russia
 ourfinaldata %>% filter(Country_Region == "Russia") %>% group_by(Date) %>% summarize(Total = sum(Confirmed), Dead_count = sum(Deaths)) %>% ggplot() + geom_line(aes(x = Date, y = Total,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Dead_count,group =1), color = "red")+ ggtitle("Russia Cases and Deaths")
 ```
+
 
 Plots of the Percentage of Population Infected
 ```{r}
