@@ -6,7 +6,28 @@ output: html_notebook
 ```{r}
 ourfinaldata = read_csv("ourfinaldata.csv")
 ourfinaldata$Date <-as.Date(ourfinaldata$Date, format = "%m/%d/%y")
-ourfinaldata
+ourfinaldata%>%
+  arrange(desc(Country_Region))
 ```
 
+```{r}
+ourfinaldata %>% 
+  filter(Confirmed > 500 & Country_Region != "China")%>%
+  ggplot(mapping = aes(x = Date, y = Confirmed, color=Country_Region))+
+  geom_line()
+```
+
+```{r}
+ourfinaldata %>% 
+  filter(Confirmed > 300 & Date == "2020-03-13" & Country_Region != "China" )%>%
+  ggplot(mapping = aes(x = NY.GDP.PCAP.KD, y = Confirmed, fill=Country_Region))+
+  geom_col(width = 2000)
+```
+
+```{r}
+ourfinaldata %>% 
+  filter(Confirmed > 200 & Date == "2020-03-13" & Country_Region != "China" )%>%
+  ggplot(mapping = aes(x = country_ave_temp, y = Confirmed, fill=Country_Region))+
+  geom_col(width = 1)
+```
 
