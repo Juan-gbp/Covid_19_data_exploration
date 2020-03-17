@@ -80,46 +80,44 @@ ourfinaldata %>% group_by(Date) %>% summarize(Total = sum(Confirmed), Dead_count
 ourfinaldata %>% group_by(Date) %>% summarize(Total = sum(Confirmed), Dead_count = sum(Deaths)) %>% ggplot() + geom_line(aes(x = Date, y = Total,group = 1), linetype = "dashed")  + geom_line(aes(x = Date, y = Dead_count, group = 1), color = "red")+ ggtitle("World Cases and Deaths Graph 1")
 
 #Deaths in China
-ourfinaldata %>% filter(Country_Region == "China") %>% group_by(Date) %>% summarize(Total = sum(Confirmed), Dead_count = sum(Deaths)) %>% ggplot() + geom_line(aes(x = Date, y = Total,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Dead_count,group =1), color = "red")+ ggtitle("China Cases and Deaths")
-
 ourfinaldata %>% filter(Country_Region == "China") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("China Cases and Deaths")
 
 #Deaths in United States
-ourfinaldata %>% filter(Country_Region == "United States") %>% group_by(Date) %>% summarize(Total = sum(Confirmed), Dead_count = sum(Deaths)) %>% ggplot() + geom_line(aes(x = Date, y = Total,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Dead_count,group =1), color = "red")+ ggtitle("USA Cases and Deaths")
+ourfinaldata %>% filter(Country_Region == "United States") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("United States Cases and Deaths")
 
 #Deaths in South Korea
-ourfinaldata %>% filter(Country_Region == "Korea, South") %>% group_by(Date) %>% summarize(Total = sum(Confirmed), Dead_count = sum(Deaths)) %>% ggplot() + geom_line(aes(x = Date, y = Total,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Dead_count,group =1), color = "red")+ ggtitle("South Korea Cases and Deaths")
+ourfinaldata %>% filter(Country_Region == "Korea, South") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("South Korea Cases and Deaths")
 
 #Deaths in Italy
-ourfinaldata %>% filter(Country_Region == "Italy") %>% group_by(Date) %>% summarize(Total = sum(Confirmed), Dead_count = sum(Deaths)) %>% ggplot() + geom_line(aes(x = Date, y = Total,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Dead_count,group =1), color = "red")+ ggtitle("Italy Cases and Deaths")
+ourfinaldata %>% filter(Country_Region == "Italy") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("Italy Cases and Deaths")
 
 #Deaths in Spain
-ourfinaldata %>% filter(Country_Region == "Spain") %>% group_by(Date) %>% summarize(Total = sum(Confirmed), Dead_count = sum(Deaths)) %>% ggplot() + geom_line(aes(x = Date, y = Total,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Dead_count,group =1), color = "red")+ ggtitle("Spain Cases and Deaths")
+ourfinaldata %>% filter(Country_Region == "Spain") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("Spain Cases and Deaths")
 
 
 ```
 
 ```{r}
 #Deaths in Canada
-ourfinaldata %>% filter(Country_Region == "Canada") %>% group_by(Date) %>% summarize(Total = sum(Confirmed), Dead_count = sum(Deaths)) %>% ggplot() + geom_line(aes(x = Date, y = Total,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Dead_count,group =1), color = "red")+ ggtitle("Canada Cases and Deaths")
+ourfinaldata %>% filter(Country_Region == "Canda") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("Canada Cases and Deaths")
 
 #Deaths in Japan
-ourfinaldata %>% filter(Country_Region == "Japan") %>% group_by(Date) %>% summarize(Total = sum(Confirmed), Dead_count = sum(Deaths)) %>% ggplot() + geom_line(aes(x = Date, y = Total,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Dead_count,group =1), color = "red")+ ggtitle("Japan Cases and Deaths")
+ourfinaldata %>% filter(Country_Region == "Japan") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("Japan Cases and Deaths")
 
 #Deaths in Costa Rica
-ourfinaldata %>% filter(Country_Region == "Costa Rica") %>% group_by(Date) %>% summarize(Total = sum(Confirmed), Dead_count = sum(Deaths)) %>% ggplot() + geom_line(aes(x = Date, y = Total,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Dead_count,group =1), color = "red")+ ggtitle("Costa Rica Cases and Deaths")
+ourfinaldata %>% filter(Country_Region == "Costa Rica") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("Costa Rica Cases and Deaths")
 
 #Deaths in Germany
-ourfinaldata %>% filter(Country_Region == "Germany") %>% group_by(Date) %>% summarize(Total = sum(Confirmed), Dead_count = sum(Deaths)) %>% ggplot() + geom_line(aes(x = Date, y = Total,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Dead_count,group =1), color = "red")+ ggtitle("Germany Cases and Deaths")
+ourfinaldata %>% filter(Country_Region == "Germany") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("Germany Cases and Deaths")
 
 #Deaths in United Kingdom
-ourfinaldata %>% filter(Country_Region == "United Kingdom") %>% group_by(Date) %>% summarize(Total = sum(Confirmed), Dead_count = sum(Deaths)) %>% ggplot() + geom_line(aes(x = Date, y = Total,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Dead_count,group =1), color = "red")+ ggtitle("United Kingdom Cases and Deaths")
+ourfinaldata %>% filter(Country_Region == "United Kingdom") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("United Kingdom Cases and Deaths")
 
 #Deaths in France
-ourfinaldata %>% filter(Country_Region == "France") %>% group_by(Date) %>% summarize(Total = sum(Confirmed), Dead_count = sum(Deaths)) %>% ggplot() + geom_line(aes(x = Date, y = Total,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Dead_count,group =1), color = "red")+ ggtitle("France Cases and Deaths")
+ourfinaldata %>% filter(Country_Region == "France") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("France Cases and Deaths")
 
 #Russia
-ourfinaldata %>% filter(Country_Region == "Russia") %>% group_by(Date) %>% summarize(Total = sum(Confirmed), Dead_count = sum(Deaths)) %>% ggplot() + geom_line(aes(x = Date, y = Total,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Dead_count,group =1), color = "red")+ ggtitle("Russia Cases and Deaths")
+ourfinaldata %>% filter(Country_Region == "Russia") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("Russia Cases and Deaths")
 ```
 
 
