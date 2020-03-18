@@ -27,31 +27,37 @@ virus <- replace.value(virus,"Country_Region",from = "US",to = "United States") 
 
 US_virus = virus %>% filter(Country_Region == "United States")%>% group_by(Date) %>% separate(col = Province_State, into = c("City_or_County","State"),sep = ",") %>% filter(is.na(State)== T)%>% summarize(Confirmed = sum(Confirmed),Deaths = sum(Deaths), Recovered = sum(Recovered)) %>% mutate("Province_State" = "United States", "Country_Region" = "United States")
 
-No_US_virus = virus %>% filter(Country_Region != "United States",Country_Region != "China",Country_Region != "Australia")
+No_US_virus = virus %>% filter(Country_Region != "United States",Country_Region != "China",Country_Region != "Australia",Country_Region != "Canada")
 
 country_virus = full_join(No_US_virus, US_virus)
 country_virus %>% filter(Country_Region == "United States")
 
 #For China
 China_virus = virus %>% filter(Country_Region == "China") %>% group_by(Date) %>% summarize(Confirmed = sum(Confirmed),Deaths = sum(Deaths), Recovered = sum(Recovered)) %>% mutate("Province_State" = "China", "Country_Region" = "China")
-No_China_virus = virus %>% filter(Country_Region != "China", Country_Region != "United States",Country_Region != "Australia")
+No_China_virus = virus %>% filter(Country_Region != "China", Country_Region != "United States",Country_Region != "Australia",Country_Region != "Canada")
 country_virus1 = full_join(No_China_virus, China_virus)
+
+#For Canada
+Canada_virus = virus %>% filter(Country_Region == "Canada") %>% group_by(Date) %>% summarize(Confirmed = sum(Confirmed),Deaths = sum(Deaths), Recovered = sum(Recovered)) %>% mutate("Province_State" = "Canada", "Country_Region" = "Canada")
+No_Canada_virus = virus %>% filter(Country_Region != "China", Country_Region != "United States",Country_Region != "Australia", Country_Region != "Canada")
+country_virus11 = full_join(No_Canada_virus, Canada_virus)
 
 #For Australia
 Australia_virus = virus %>% filter(Country_Region == "Australia")%>% group_by(Date) %>% summarize(Confirmed = sum(Confirmed),Deaths = sum(Deaths), Recovered = sum(Recovered)) %>% mutate("Province_State" = "Australia", "Country_Region" = "Australia")
-No_Australia_virus = virus %>% filter(Country_Region != "Australia", Country_Region != "United States",Country_Region != "China")
+No_Australia_virus = virus %>% filter(Country_Region != "Australia", Country_Region != "United States",Country_Region != "China", Country_Region != "Canada")
 country_virus2 = full_join(No_Australia_virus, Australia_virus)
 
 predata = full_join(country_virus,country_virus1)
 mydata = full_join(predata,country_virus2)
-#mydata %>% filter(Country_Region == "Switzerland")
+mydata2 = full_join(mydata,country_virus11)
+mydata2 %>% filter(Country_Region == "Canada")
 ```
 
 ```{r}
-mydata
+mydata2
 #GDPandWeather = GDPandWeather %>% rename("Country_Region"= Country)
 GDPandWeather
-partialdata = left_join(mydata,GDPandWeather,by = "Country_Region")
+partialdata = left_join(mydata2,GDPandWeather,by = "Country_Region")
 country_population_2 = country_population_1 %>% rename("Country_Region"= Country)
 ourfinaldata = left_join(partialdata,country_population_2, by = "Country_Region")
 
@@ -94,12 +100,13 @@ ourfinaldata %>% filter(Country_Region == "Italy") %>% group_by(Date) %>%  ggplo
 #Deaths in Spain
 ourfinaldata %>% filter(Country_Region == "Spain") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("Spain Cases and Deaths")
 
-
+#Deaths in Iran
+ourfinaldata %>% filter(Country_Region == "Iran") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("Iran Cases and Deaths")
 ```
 
 ```{r}
 #Deaths in Canada
-ourfinaldata %>% filter(Country_Region == "Canda") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("Canada Cases and Deaths")
+ourfinaldata %>% filter(Country_Region == "Canada") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("Canada Cases and Deaths")
 
 #Deaths in Japan
 ourfinaldata %>% filter(Country_Region == "Japan") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("Japan Cases and Deaths")
@@ -114,7 +121,7 @@ ourfinaldata %>% filter(Country_Region == "Germany") %>% group_by(Date) %>%  ggp
 ourfinaldata %>% filter(Country_Region == "United Kingdom") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("United Kingdom Cases and Deaths")
 
 #Deaths in France
-ourfinaldata %>% filter(Country_Region == "France") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("France Cases and Deaths")
+ourfinaldata %>% filter(Country_Region == "France" & Province_State ==  "France") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("France Cases and Deaths")
 
 #Russia
 ourfinaldata %>% filter(Country_Region == "Russia") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("Russia Cases and Deaths")
@@ -139,6 +146,20 @@ ourfinaldata %>%filter(Country_Region == "Spain") %>%group_by(Date)%>% summarize
 
 #India
 ourfinaldata %>%filter(Country_Region == "India") %>%group_by(Date)%>% summarize(Total = sum(Confirmed),Pop = Population_2020) %>% mutate("Percent_Infected" = (Total/Pop)*100) %>% ggplot()+geom_line(mapping = aes(x = Date, y = Percent_Infected)) + ylim(0,1) +ggtitle("Percentange of People Infected in India")
+
+#Iran
+ourfinaldata %>%filter(Country_Region == "Iran") %>%group_by(Date)%>% summarize(Total = sum(Confirmed),Pop = Population_2020) %>% mutate("Percent_Infected" = (Total/Pop)*100) %>% ggplot()+geom_line(mapping = aes(x = Date, y = Percent_Infected)) + ylim(0,1) +ggtitle("Percentange of People Infected in Iran")
 ```
 
+#State Cases
+```{r}
+virus$Date <-as.Date(virus$Date, format = "%m/%d/%y")
+
+states = virus %>% filter(Country_Region == "United States",Province_State == "New York"|Province_State == "California"|Province_State == "Washington"|Province_State == "Pennsylvania")
+
+ggplot(states,aes(x = Date,y = Confirmed, group = Province_State))+geom_line(aes(color = Province_State))
+
+virus %>% filter(Country_Region == "United States",Province_State == "New York")
+ourfinaldata %>% filter(Country_Region == "China")
+```
 
