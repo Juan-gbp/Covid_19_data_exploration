@@ -65,7 +65,7 @@ ourfinaldata = left_join(partialdata,country_population_2, by = "Country_Region"
 
 Filter by the previous day to make sure we have the most recent data.
 ```{r}
-ourfinaldata %>% filter(Date == "2020-03-19")
+ourfinaldata %>% filter(Date == "2020-03-20")
 ```
 
 
