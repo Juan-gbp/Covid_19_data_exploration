@@ -3,7 +3,12 @@ title: "JPFile"
 output: html_notebook
 ---
 
+
+
 ```{r}
+library(tidyverse)
+library(plotly)
+setwd("~/Stats_Project")
 ourfinaldata = read_csv("ourfinaldata.csv")
 ourfinaldata$Date <-as.Date(ourfinaldata$Date, format = "%m/%d/%y")
 ourfinaldata%>%
@@ -12,22 +17,79 @@ ourfinaldata%>%
 
 ```{r}
 ourfinaldata %>% 
-  filter(Confirmed > 500 & Country_Region != "China")%>%
-  ggplot(mapping = aes(x = Date, y = Confirmed, color=Country_Region))+
-  geom_line()
+  filter(Confirmed > 200 & Country_Region != "China")%>%
+  plot_ly(x = ~Date, y = ~Confirmed, color = ~Country_Region, mode = 'lines')
+
+  #ggplot(mapping = aes(x = Date, y = Confirmed, color=Country_Region))+
+  #geom_line()
+```
+
+```{r}
+p<-ourfinaldata %>% 
+  filter(Confirmed > 200 & Date == "2020-03-19" & Country_Region != "China" )
+
+plot_ly(p,x = ~NY.GDP.PCAP.KD, y = ~ Confirmed, color = ~Country_Region, size = 2 )%>%
+  layout(xaxis=list(range = c(min(0),max(90000))), yaxis = list(range = c(min(0), max(42000))))
+  
+  #ggplot(mapping = aes(x = NY.GDP.PCAP.KD, y = Confirmed, fill=Country_Region))+
+  #geom_col(width = 2000)
+```
+
+```{r}
+
+p <- ourfinaldata %>% 
+  filter(Confirmed > 200 & Date == "2020-03-19" & Country_Region != "China")
+
+p%>%
+  plot_ly(x = ~country_ave_temp, y = ~ Confirmed, mode = "markers", color = ~Country_Region, size=2)%>%
+  layout(xaxis=list(range = c(min(-40),max(40))), yaxis = list(range = c(min(0), max(42000))))%>%
+  add_markers(y = ~Confirmed, text = rownames(~Country_Region))
+
+
+  #ggplot(mapping = aes(x = country_ave_temp, y = Confirmed, fill=Country_Region))+
+  #geom_col(width = 1)
 ```
 
 ```{r}
 ourfinaldata %>% 
-  filter(Confirmed > 300 & Date == "2020-03-13" & Country_Region != "China" )%>%
-  ggplot(mapping = aes(x = NY.GDP.PCAP.KD, y = Confirmed, fill=Country_Region))+
-  geom_col(width = 2000)
+  filter(Confirmed > 100 & Date == "2020-03-19" & Country_Region != "China" )%>%
+  plot_ly(x = ~Country_Region, y = ~Confirmed, color = ~Country_Region)
 ```
 
 ```{r}
-ourfinaldata %>% 
-  filter(Confirmed > 200 & Date == "2020-03-13" & Country_Region != "China" )%>%
-  ggplot(mapping = aes(x = country_ave_temp, y = Confirmed, fill=Country_Region))+
-  geom_col(width = 1)
+p <- ourfinaldata %>% 
+  filter(Confirmed > 200 & Date == "2020-03-19" & Country_Region != "China")
+p%>%select(-Date, -Lat, -Long)%>% summary()
+```
+
+```{r}
+library(moderndive)
+p <- ourfinaldata %>% 
+  filter(Confirmed > 200 & Date == "2020-03-19" & Country_Region != "China")
+p %>% get_correlation( Confirmed ~ country_ave_temp, na.rm = T)
+```
+
+```{r}
+reg <- lm(Confirmed ~ country_ave_temp,data = p)
+reg
+get_regression_table(reg)
+```
+
+```{r}
+p <- ourfinaldata %>% 
+  filter(Confirmed > 100 & Date == "2020-03-19" & Country_Region != "China")
+p %>% ggplot(mapping = aes(x = Population_2020, y = Confirmed))+
+  geom_point()+
+  geom_smooth(aes(y=Confirmed, x =  Population_2020))
+
+```
+
+
+```{r}
+p <- ourfinaldata %>% 
+  filter(Confirmed > 200 & Date == "2020-03-19" & Country_Region != "China")
+
+p%>%
+  plot_ly(x = ~Population_2020, y = ~ Confirmed, mode = "markers", color = ~Country_Region, size=2)
 ```
 
