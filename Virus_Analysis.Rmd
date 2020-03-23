@@ -194,6 +194,6 @@ ggplot(states,aes(x = Date,y = Confirmed, group = Province_State))+geom_line(aes
 virus %>% filter(Country_Region == "United States"& Date == "2020-03-22") %>% top_n(Confirmed, n = 15)%>% arrange(desc(Confirmed))
 
 #Bottom 10 States based on total Cases
-virus %>% filter(Country_Region == "United States"& Date == "2020-03-22") %>% top_n(Confirmed, n = -10)%>% arrange(desc(Confirmed))
+virus %>% filter(Country_Region == "United States"& Date == "2020-03-22") %>% top_n(Confirmed, n = -15)%>% arrange(desc(Confirmed))
 ```
 
