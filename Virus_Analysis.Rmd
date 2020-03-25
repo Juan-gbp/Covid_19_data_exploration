@@ -25,7 +25,9 @@ virus <- replace.value(virus,"Country_Region",from = "US",to = "United States") 
 
 #US_virus = virus %>% filter(Country_Region == "US") %>% filter(Province_State != "Grand Princess Cruise Ship",Province_State != "Omaha, NE (From Diamond Princess)",Province_State != "Travis, CA (From Diamond Princess)",Province_State != "Lackland, TX (From Diamond Princess)",Province_State != "Unassigned Location (From Diamond Princess)") %>% group_by(Date) %>% summarize(Confirmed = sum(Confirmed),Deaths = sum(Deaths), Recovered = sum(Recovered)) %>% mutate("Province_State" = "US", "Country_Region" = "US") #OLD DATSET CODE; new dataset broken into cities and countries
 
-US_virus = virus %>% filter(Country_Region == "United States")%>% group_by(Date) %>% separate(col = Province_State, into = c("City_or_County","State"),sep = ",") %>% filter(is.na(State)== T)%>% summarize(Confirmed = sum(Confirmed),Deaths = sum(Deaths), Recovered = sum(Recovered)) %>% mutate("Province_State" = "United States", "Country_Region" = "United States")
+#Code for Second Version of Dataset until 3/25
+#US_virus = virus %>% filter(Country_Region == "United States")%>% group_by(Date) %>% separate(col = Province_State, into = c("City_or_County","State"),sep = ",") %>% filter(is.na(State)== T)%>% summarize(Confirmed = sum(Confirmed),Deaths = sum(Deaths), Recovered = sum(Recovered)) %>% mutate("Province_State" = "United States", "Country_Region" = "United States")
+US_virus = virus %>% filter(Country_Region == "United States")%>% group_by(Date) %>% separate(col = Province_State, into = c("City_or_County","State"),sep = ",") %>% filter(is.na(State)== T)%>% summarize(Confirmed = sum(Confirmed),Deaths = sum(Deaths)) %>% mutate("Province_State" = "United States", "Country_Region" = "United States")
 
 No_US_virus = virus %>% filter(Country_Region != "United States",Country_Region != "China",Country_Region != "Australia",Country_Region != "Canada")
 
@@ -33,17 +35,17 @@ country_virus = full_join(No_US_virus, US_virus)
 country_virus %>% filter(Country_Region == "United States")
 
 #For China
-China_virus = virus %>% filter(Country_Region == "China") %>% group_by(Date) %>% summarize(Confirmed = sum(Confirmed),Deaths = sum(Deaths), Recovered = sum(Recovered)) %>% mutate("Province_State" = "China", "Country_Region" = "China")
+China_virus = virus %>% filter(Country_Region == "China") %>% group_by(Date) %>% summarize(Confirmed = sum(Confirmed),Deaths = sum(Deaths)) %>% mutate("Province_State" = "China", "Country_Region" = "China")
 No_China_virus = virus %>% filter(Country_Region != "China", Country_Region != "United States",Country_Region != "Australia",Country_Region != "Canada")
 country_virus1 = full_join(No_China_virus, China_virus)
 
 #For Canada
-Canada_virus = virus %>% filter(Country_Region == "Canada") %>% group_by(Date) %>% summarize(Confirmed = sum(Confirmed),Deaths = sum(Deaths), Recovered = sum(Recovered)) %>% mutate("Province_State" = "Canada", "Country_Region" = "Canada")
+Canada_virus = virus %>% filter(Country_Region == "Canada") %>% group_by(Date) %>% summarize(Confirmed = sum(Confirmed),Deaths = sum(Deaths)) %>% mutate("Province_State" = "Canada", "Country_Region" = "Canada")
 No_Canada_virus = virus %>% filter(Country_Region != "China", Country_Region != "United States",Country_Region != "Australia", Country_Region != "Canada")
 country_virus11 = full_join(No_Canada_virus, Canada_virus)
 
 #For Australia
-Australia_virus = virus %>% filter(Country_Region == "Australia")%>% group_by(Date) %>% summarize(Confirmed = sum(Confirmed),Deaths = sum(Deaths), Recovered = sum(Recovered)) %>% mutate("Province_State" = "Australia", "Country_Region" = "Australia")
+Australia_virus = virus %>% filter(Country_Region == "Australia")%>% group_by(Date) %>% summarize(Confirmed = sum(Confirmed),Deaths = sum(Deaths)) %>% mutate("Province_State" = "Australia", "Country_Region" = "Australia")
 No_Australia_virus = virus %>% filter(Country_Region != "Australia", Country_Region != "United States",Country_Region != "China", Country_Region != "Canada")
 country_virus2 = full_join(No_Australia_virus, Australia_virus)
 
@@ -118,10 +120,10 @@ ourfinaldata %>% filter(Country_Region == "Costa Rica") %>% group_by(Date) %>%  
 ourfinaldata %>% filter(Country_Region == "Germany") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("Germany Cases and Deaths")
 
 #Deaths in United Kingdom
-ourfinaldata %>% filter(Country_Region == "United Kingdom"&Province_State == "United Kingdom") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("United Kingdom Cases and Deaths")
+ourfinaldata %>% filter(Country_Region == "United Kingdom"& is.na(Province_State)) %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("United Kingdom Cases and Deaths")
 
 #Deaths in France
-ourfinaldata %>% filter(Country_Region == "France" & Province_State ==  "France") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("France Cases and Deaths")
+ourfinaldata %>% filter(Country_Region == "France" & is.na(Province_State)) %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("France Cases and Deaths")
 
 #Russia
 ourfinaldata %>% filter(Country_Region == "Russia") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("Russia Cases and Deaths")
@@ -191,9 +193,32 @@ states = virus %>% filter(Country_Region == "United States",Province_State == "N
 ggplot(states,aes(x = Date,y = Confirmed, group = Province_State))+geom_line(aes(color = Province_State))
 
 #Top 10 States based on total Cases
-virus %>% filter(Country_Region == "United States"& Date == "2020-03-22") %>% top_n(Confirmed, n = 15)%>% arrange(desc(Confirmed))
+virus %>% filter(Country_Region == "United States"& Date == "2020-03-23") %>% top_n(Confirmed, n = 15)%>% arrange(desc(Confirmed))
 
 #Bottom 10 States based on total Cases
 virus %>% filter(Country_Region == "United States"& Date == "2020-03-22") %>% top_n(Confirmed, n = -15)%>% arrange(desc(Confirmed))
+```
+
+#Logistic Regressions
+```{r}
+ourfinaldata %>% filter(Country_Region == "Italy") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")
+
+num_days = nrow(ourfinaldata %>% filter(Country_Region == "Italy",Confirmed >3))
+days = c(1:num_days-1)
+logistic_dat = ourfinaldata %>% filter(Country_Region == "Italy",Confirmed >3) %>% mutate("Num_Days_Since_Start"=c(1:num_days-1))
+#logistic <- nls(Confirmed~SSlogis(Num_Days_Since_Start),data = logistic_dat)
+
+y <- function(x){
+  return(c(120395.1478/(1+367.173043*exp(-0.195399*x))))
+}
+xlist = c(1:num_days+1)
+ylist = list()
+
+for (thing in logistic_dat$Num_Days_Since_Start){ylist[thing] <- y(thing)}
+length(ylist)
+length(logistic_dat$Num_Days_Since_Start)
+#logistic_dat %>% filter(Country_Region == "Italy") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Num_Days_Since_Start, y = Confirmed,group =1), linetype = "dashed") +geom_point(aes(x = Num_Days_Since_Start, y = ylist))
+#logistic_dat$Num_Days_Since_Start
+#ggplot() + geom_point(aes(x = xlist, y = ylist))
 ```
 
