@@ -154,8 +154,16 @@ ourfinaldata %>% filter(Country_Region == "Australia") %>% group_by(Date) %>%  g
 
 #Mexico
 ourfinaldata %>% filter(Country_Region == "Mexico") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("Mexico Cases and Deaths")
+
 ```
 
+```{r}
+#Serbia
+ourfinaldata %>% filter(Country_Region == "Serbia") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("Serbia Cases and Deaths")
+
+#Iceland
+ourfinaldata %>% filter(Country_Region == "Iceland") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("Iceland Cases and Deaths")
+```
 
 
 Plots of the Percentage of Population Infected
@@ -201,24 +209,33 @@ virus %>% filter(Country_Region == "United States"& Date == "2020-03-22") %>% to
 
 #Logistic Regressions
 ```{r}
-ourfinaldata %>% filter(Country_Region == "Italy") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")
+#ourfinaldata %>% filter(Country_Region == "Italy") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")
 
-num_days = nrow(ourfinaldata %>% filter(Country_Region == "Italy",Confirmed >3))
-days = c(1:num_days-1)
-logistic_dat = ourfinaldata %>% filter(Country_Region == "Italy",Confirmed >3) %>% mutate("Num_Days_Since_Start"=c(1:num_days-1))
-#logistic <- nls(Confirmed~SSlogis(Num_Days_Since_Start),data = logistic_dat)
+num_days_Italy = nrow(ourfinaldata %>% filter(Country_Region == "Italy",Confirmed >3))
+Italy_dat = ourfinaldata %>% filter(Country_Region == "Italy",Confirmed >3) %>% mutate("Num_Days_Since_Start"=c(1:num_days_Italy-1))
+num_days_USA = nrow(ourfinaldata %>% filter(Country_Region == "United States",Confirmed >13))
+USA_dat = ourfinaldata %>% filter(Country_Region == "United States",Confirmed >13) %>% mutate("Num_Days_Since_Start"=c(1:num_days_USA-1)) %>% arrange(Date)
 
-y <- function(x){
+y_Italy <- function(x){
   return(c(120395.1478/(1+367.173043*exp(-0.195399*x))))
 }
-xlist = c(1:num_days+1)
-ylist = list()
+Days = c(1:num_days_Italy)
+Days = matrix(xlist,byrow = T,ncol = length(xlist))
 
-for (thing in logistic_dat$Num_Days_Since_Start){ylist[thing] <- y(thing)}
-length(ylist)
-length(logistic_dat$Num_Days_Since_Start)
-#logistic_dat %>% filter(Country_Region == "Italy") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Num_Days_Since_Start, y = Confirmed,group =1), linetype = "dashed") +geom_point(aes(x = Num_Days_Since_Start, y = ylist))
-#logistic_dat$Num_Days_Since_Start
-#ggplot() + geom_point(aes(x = xlist, y = ylist))
+Total_Confirmed_Italy = apply(Days,1,y_Italy)
+Total_Confirmed_Italy = t(y_vals)
+
+y_USA <- function(x){
+  return(c(144036.695/(1+127050.009*exp(-0.3642*x))))
+}
+Days_USA = c(1:num_days_USA)
+Days_USA = matrix(Days,byrow = T,ncol = length(Days))
+
+Total_Confirmed_USA = apply(Days_USA,1,y_USA)
+Total_Confirmed_USA = t(Total_Confirmed_USA)
+
+plot(Days,Total_Confirmed_Italy,xlim = range(0,num_days_Italy),ylim = range(0,max(Total_Confirmed_Italy)),type = "l")
+points(Italy_dat$Num_Days_Since_Start,Italy_dat$Confirmed,col = "red")
+points(USA_dat$Num_Days_Since_Start,USA_dat$Confirmed, col = "blue")
 ```
 
