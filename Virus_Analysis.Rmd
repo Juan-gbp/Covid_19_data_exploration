@@ -165,6 +165,13 @@ ourfinaldata %>% filter(Country_Region == "Serbia") %>% group_by(Date) %>%  ggpl
 ourfinaldata %>% filter(Country_Region == "Iceland") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("Iceland Cases and Deaths")
 ```
 
+```{r}
+#Comparison of Total Cases in each country
+ourfinaldata %>% filter(Country_Region == "United States"|Country_Region == "Italy"|Country_Region=="China"|Country_Region == "Spain"|Country_Region == "Iran"|Country_Region == "Australia"|Country_Region == "South Korea") %>% ggplot(mapping = aes(x=Date,y = Confirmed, color = Country_Region))+geom_line() +ggtitle("Total Confirmed Cases Over Time")
+ourfinaldata %>% filter(Country_Region == "United States"|Country_Region == "Italy"|Country_Region=="China"|Country_Region == "Spain"|Country_Region == "Iran"|Country_Region == "Australia"|Country_Region == "South Korea") %>% ggplot(mapping = aes(x=Date,y = Deaths, color = Country_Region))+geom_line() +ggtitle("Total Confirmed Deaths Over Time")
+```
+
+
 
 Plots of the Percentage of Population Infected
 ```{r}
@@ -236,6 +243,6 @@ Total_Confirmed_USA = t(Total_Confirmed_USA)
 
 plot(Days,Total_Confirmed_Italy,xlim = range(0,num_days_Italy),ylim = range(0,max(Total_Confirmed_Italy)),type = "l")
 points(Italy_dat$Num_Days_Since_Start,Italy_dat$Confirmed,col = "red")
-points(USA_dat$Num_Days_Since_Start,USA_dat$Confirmed, col = "blue")
+#points(USA_dat$Num_Days_Since_Start,USA_dat$Confirmed, col = "blue")
 ```
 
