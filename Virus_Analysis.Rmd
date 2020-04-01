@@ -91,7 +91,7 @@ ourfinaldata %>% group_by(Date) %>% summarize(Total = sum(Confirmed), Dead_count
 ourfinaldata %>% filter(Country_Region == "China") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("China Cases and Deaths")
 
 #Deaths in United States
-ourfinaldata %>% filter(Country_Region == "United States") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("United States Cases and Deaths")
+ourfinaldata %>% filter(Country_Region == "United States") %>% group_by(Date) %>% arrange(Date)%>% ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("United States Cases and Deaths")
 
 #Deaths in South Korea
 ourfinaldata %>% filter(Country_Region == "South Korea") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("South Korea Cases and Deaths")
@@ -221,7 +221,7 @@ virus %>% filter(Country_Region == "United States"& Date == "2020-03-22") %>% to
 num_days_Italy = nrow(ourfinaldata %>% filter(Country_Region == "Italy",Confirmed >3))
 Italy_dat = ourfinaldata %>% filter(Country_Region == "Italy",Confirmed >3) %>% mutate("Num_Days_Since_Start"=c(1:num_days_Italy-1))
 num_days_USA = nrow(ourfinaldata %>% filter(Country_Region == "United States",Confirmed >13))
-USA_dat = ourfinaldata %>% filter(Country_Region == "United States",Confirmed >13) %>% mutate("Num_Days_Since_Start"=c(1:num_days_USA-1)) %>% arrange(Date)
+USA_dat = ourfinaldata %>% filter(Country_Region == "United States",Confirmed >13)%>% arrange(Date) %>% mutate("Num_Days_Since_Start"=c(1:num_days_USA-1)) 
 
 y_Italy <- function(x){
   return(c(120395.1478/(1+367.173043*exp(-0.195399*x))))
