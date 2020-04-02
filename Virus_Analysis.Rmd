@@ -163,6 +163,9 @@ ourfinaldata %>% filter(Country_Region == "Serbia") %>% group_by(Date) %>%  ggpl
 
 #Iceland
 ourfinaldata %>% filter(Country_Region == "Iceland") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("Iceland Cases and Deaths")
+
+#Afghanistan
+ourfinaldata %>% filter(Country_Region == "Afghanistan") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("Afghanistan Cases and Deaths")
 ```
 
 ```{r}
@@ -201,17 +204,17 @@ ourfinaldata %>%filter(Country_Region == "South Africa") %>%group_by(Date)%>% su
 
 #State Cases
 ```{r}
-virus$Date <-as.Date(virus$Date, format = "%m/%d/%y")
+#virus$Date <-as.Date(virus$Date, format = "%m/%d/%y")
 
-states = virus %>% filter(Country_Region == "United States",Province_State == "New York"|Province_State == "California"|Province_State == "Washington"|Province_State == "Pennsylvania"|Province_State == "Florida" |Province_State == "New Jersey"|Province_State == "Massachusetts")
+#states = virus %>% filter(Country_Region == "United States",Province_State == "New York"|Province_State == "California"|Province_State == "Washington"|Province_State == "Pennsylvania"|Province_State == "Florida" |Province_State == "New Jersey"|Province_State == "Massachusetts")
 
-ggplot(states,aes(x = Date,y = Confirmed, group = Province_State))+geom_line(aes(color = Province_State))
+#ggplot(states,aes(x = Date,y = Confirmed, group = Province_State))+geom_line(aes(color = Province_State))
 
 #Top 10 States based on total Cases
-virus %>% filter(Country_Region == "United States"& Date == "2020-03-23") %>% top_n(Confirmed, n = 15)%>% arrange(desc(Confirmed))
+#virus %>% filter(Country_Region == "United States"& Date == "2020-03-23") %>% top_n(Confirmed, n = 15)%>% arrange(desc(Confirmed))
 
 #Bottom 10 States based on total Cases
-virus %>% filter(Country_Region == "United States"& Date == "2020-03-22") %>% top_n(Confirmed, n = -15)%>% arrange(desc(Confirmed))
+#virus %>% filter(Country_Region == "United States"& Date == "2020-03-22") %>% top_n(Confirmed, n = -15)%>% arrange(desc(Confirmed))
 ```
 
 #Logistic Regressions
@@ -227,10 +230,10 @@ y_Italy <- function(x){
   return(c(120395.1478/(1+367.173043*exp(-0.195399*x))))
 }
 Days = c(1:num_days_Italy)
-Days = matrix(xlist,byrow = T,ncol = length(xlist))
+Days = matrix(Days,byrow = T,ncol = length(Days))
 
 Total_Confirmed_Italy = apply(Days,1,y_Italy)
-Total_Confirmed_Italy = t(y_vals)
+Total_Confirmed_Italy = t(Total_Confirmed_Italy)
 
 y_USA <- function(x){
   return(c(144036.695/(1+127050.009*exp(-0.3642*x))))
@@ -243,6 +246,17 @@ Total_Confirmed_USA = t(Total_Confirmed_USA)
 
 plot(Days,Total_Confirmed_Italy,xlim = range(0,num_days_Italy),ylim = range(0,max(Total_Confirmed_Italy)),type = "l")
 points(Italy_dat$Num_Days_Since_Start,Italy_dat$Confirmed,col = "red")
-#points(USA_dat$Num_Days_Since_Start,USA_dat$Confirmed, col = "blue")
+points(USA_dat$Num_Days_Since_Start,USA_dat$Confirmed, col = "blue")
+```
+#County Data for US
+
+```{r}
+my_counties = read_csv("usa_county_wise.csv")
+my_counties$Date <-as.Date(my_counties$Date, format = "%m/%d/%y")
+my_counties %>% filter(Province_State == "Pennsylvania" & Date == "2020-03-30")
+
+#SELECT FUNCTION BELOW HAS PROBLEM, OVERWRITTEN BY MASS LIBRARY
+#my_counties %>% select(Province_State,Date,Confirmed,Deaths)
+
 ```
 
