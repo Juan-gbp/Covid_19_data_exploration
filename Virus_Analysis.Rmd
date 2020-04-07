@@ -10,6 +10,7 @@ Avg Temperature
 ```{r}
 library(tidyverse)
 library(anchors)
+library(moderndive)
 ```
 
 #Code to Set Up our CSV file
@@ -214,6 +215,7 @@ Italy_dat = ourfinaldata %>% filter(Country_Region == "Italy",Confirmed >3) %>% 
 #Using Nonlinear Least Squares Logistic Growth Model
 Italy_mod = nls(Confirmed ~  c/(1+a*exp(b*Num_Days_Since_Start)), start = list(a=367.17, b = -0.195399, c = 120395.1478), data = Italy_dat)
 coef(summary(Italy_mod))
+
 ```
 
 #Logistic Growth for United States
