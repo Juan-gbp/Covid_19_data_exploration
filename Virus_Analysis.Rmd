@@ -83,16 +83,18 @@ library(lubridate)
 #Formatting the variable date as mdy and ordering it
 ourfinaldata$Date <-as.Date(ourfinaldata$Date, format = "%m/%d/%y")
 #One Plot of World Deaths
-ourfinaldata %>% group_by(Date) %>% summarize(Total = sum(Confirmed), Dead_count = sum(Deaths)) %>% ggplot() + geom_line(aes(x = Date, y = Total,group=1, size = Dead_count)) +  ggtitle("World Cases and Deaths Graph 1")
+ourfinaldata %>% group_by(Date) %>% summarize(Total = sum(Confirmed,na.rm = TRUE), Dead_count = sum(Deaths,na.rm = TRUE)) %>% ggplot() + geom_line(aes(x = Date, y = Total,group=1, size = Dead_count)) +  ggtitle("World Cases and Deaths Graph 1")
 
 #Another Plot of World Deaths
-ourfinaldata %>% group_by(Date) %>% summarize(Total = sum(Confirmed), Dead_count = sum(Deaths)) %>% ggplot() + geom_line(aes(x = Date, y = Total,group = 1), linetype = "dashed")  + geom_line(aes(x = Date, y = Dead_count, group = 1), color = "red")+ ggtitle("World Cases and Deaths Graph 1")
+ourfinaldata %>% group_by(Date) %>% summarize(Total = sum(Confirmed,na.rm = TRUE), Dead_count = sum(Deaths,na.rm = TRUE)) %>% ggplot() + geom_line(aes(x = Date, y = Total,group = 1), linetype = "dashed")  + geom_line(aes(x = Date, y = Dead_count, group = 1), color = "red")+ ggtitle("World Cases and Deaths Graph 1")
 
 #Deaths in China
 ourfinaldata %>% filter(Country_Region == "China") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("China Cases and Deaths")
 
 #Deaths in United States
 ourfinaldata %>% filter(Country_Region == "United States") %>% group_by(Date) %>% arrange(Date)%>% ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("United States Cases and Deaths")
+USA_trends = ourfinaldata %>% filter(Country_Region == "United States") %>% group_by(Date) %>% arrange(Date)
+write_csv(USA_trends, "USA_trends.csv") 
 
 #Deaths in South Korea
 ourfinaldata %>% filter(Country_Region == "South Korea") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("South Korea Cases and Deaths")
