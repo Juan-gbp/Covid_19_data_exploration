@@ -1,6 +1,8 @@
 ---
 title: "Coronovirus_FinalProject"
 output: html_notebook
+editor_options: 
+  chunk_output_type: inline
 ---
 
 Population
@@ -86,7 +88,7 @@ ourfinaldata$Date <-as.Date(ourfinaldata$Date, format = "%m/%d/%y")
 ourfinaldata %>% group_by(Date) %>% summarize(Total = sum(Confirmed,na.rm = TRUE), Dead_count = sum(Deaths,na.rm = TRUE)) %>% ggplot() + geom_line(aes(x = Date, y = Total,group=1, size = Dead_count)) +  ggtitle("World Cases and Deaths Graph 1")
 
 #Another Plot of World Deaths
-ourfinaldata %>% group_by(Date) %>% summarize(Total = sum(Confirmed,na.rm = TRUE), Dead_count = sum(Deaths,na.rm = TRUE)) %>% ggplot() + geom_line(aes(x = Date, y = Total,group = 1), linetype = "dashed")  + geom_line(aes(x = Date, y = Dead_count, group = 1), color = "red")+ ggtitle("World Cases and Deaths Graph 1")
+ourfinaldata %>% group_by(Date) %>% summarize(Total = sum(Confirmed,na.rm = TRUE), Dead_count = sum(Deaths,na.rm = TRUE)) %>% ggplot() + geom_line(aes(x = Date, y = Total,group = 1), linetype = "dashed")  + geom_line(aes(x = Date, y = Dead_count, group = 1), color = "red")+ ggtitle("World Cases and Deaths Graph 2")
 
 #Deaths in China
 ourfinaldata %>% filter(Country_Region == "China") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("China Cases and Deaths")
@@ -211,13 +213,17 @@ ourfinaldata %>%filter(Country_Region == "South Africa") %>%group_by(Date)%>% su
 
 #Logistic Growth for Italy
 ```{r}
-num_days_Italy = nrow(ourfinaldata %>% filter(Country_Region == "Italy",Confirmed >3))
-Italy_dat = ourfinaldata %>% filter(Country_Region == "Italy",Confirmed >3) %>% mutate("Num_Days_Since_Start"=c(1:num_days_Italy))
+ourfinaldata %>% filter(Country_Region == "Italy") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("Italy Cases and Deaths")
 
-#Using Nonlinear Least Squares Logistic Growth Model
-Italy_mod = nls(Confirmed ~  c/(1+a*exp(b*Num_Days_Since_Start)), start = list(a=367.17, b = -0.195399, c = 120395.1478), data = Italy_dat)
+num_days_Italy = nrow(ourfinaldata %>% filter(Country_Region == "Italy",Confirmed >=1))
+Italy_dat = ourfinaldata %>% filter(Country_Region == "Italy",Confirmed >=1) %>% mutate("Num_Days_Since_Start"=c(1:num_days_Italy))
+
+Italy_mod = nls(Confirmed ~  c/(1+a*exp(b*Num_Days_Since_Start)), start = list(a=100, b = -0.13, c = max(Italy_dat$Confirmed)), data = Italy_dat)
 coef(summary(Italy_mod))
 
+plot(Italy_dat$Num_Days_Since_Start,Italy_dat$Confirmed,xlab = "Number of Days Since Start",ylab = "Number of Confirmed Cases",main = "Logistic Regression for Italy")
+curve(1.772915e+05/(1+2716.7*exp(x*-0.136)), col = "blue", add = TRUE)
+#lines(Italy_dat$Num_Days_Since_Start, predict(Italy_mod), col = 2)
 ```
 
 #Logistic Growth for United States
@@ -236,23 +242,74 @@ num_days_China = nrow(ourfinaldata %>% filter(Country_Region == "China",Confirme
 China_dat = ourfinaldata %>% filter(Country_Region == "China",Confirmed >3) %>% mutate("Num_Days_Since_Start"=c(1:num_days_China)) %>% arrange(Date)
 
 #Using Nonlinear Least Squares Logistic Growth Model
-China_mod = nls(Confirmed ~  c/(1+a*exp(b*Num_Days_Since_Start)), start = list(a=65.29, b = -0.223, c = 80835.28), data = China_dat)
+China_mod = nls(Confirmed ~  c/(1+a*exp(b*Num_Days_Since_Start)), start = list(a=65.29, b = -0.223, c = 83787), data = China_dat)
 coef(summary(China_mod))
 ```
 
+#Logistic Growth for Spain
+```{r}
+num_days_Spain = nrow(ourfinaldata %>% filter(Country_Region == "Spain",Confirmed >3))
+Spain_dat = ourfinaldata %>% filter(Country_Region == "Spain",Confirmed >3) %>% mutate("Num_Days_Since_Start"=c(1:num_days_Spain)) %>% arrange(Date)
+
+#Using Nonlinear Least Squares Logistic Growth Model
+Spain_mod = nls(Confirmed ~  c/(1+a*exp(b*Num_Days_Since_Start)), start = list(a=30.29, b = -0.20, c = 191726), data = Spain_dat)
+coef(summary(Spain_mod))
+```
 
 #County/State Data for US
 
 ```{r}
 my_counties = read_csv("usa_county_wise.csv")
 my_counties$Date <-as.Date(my_counties$Date, format = "%m/%d/%y")
-my_counties %>% filter(Province_State == "Pennsylvania" & Date == "2020-04-12")
+my_counties %>% filter(Province_State == "Pennsylvania" & Date == "2020-04-19")
 
 my_counties %>% filter(Province_State == "Pennsylvania"|Province_State == "New York"|Province_State == "New Jersey"|Province_State == "Delaware"|Province_State == "California"|Province_State == "Michigan"|Province_State == "Louisiana") %>% group_by(Date,Province_State) %>% summarize(state_total = sum(Confirmed))%>% ggplot(mapping = aes(x = Date, y = state_total,color = Province_State))+geom_line()+ggtitle("Confirmed Cases across the States")
 
 
-my_counties %>% filter(Date == "2020-04-14") %>% group_by(Province_State) %>% summarize(state_total = sum(Confirmed)) %>% top_n(state_total,n=20) %>% arrange(desc(state_total))
-my_counties %>% filter(Date == "2020-04-14") %>% group_by(Province_State) %>% summarize(state_total = sum(Confirmed)) %>% top_n(state_total,n=-20) %>% arrange(desc(state_total))
+my_counties %>% filter(Date == "2020-04-19") %>% group_by(Province_State) %>% summarize(state_total = sum(Confirmed)) %>% top_n(state_total,n=20) %>% arrange(desc(state_total))
+my_counties %>% filter(Date == "2020-04-19") %>% group_by(Province_State) %>% summarize(state_total = sum(Confirmed)) %>% top_n(state_total,n=-20) %>% arrange(desc(state_total))
 
+```
+
+#Developing Countries
+List of developing countries in our dataset:
+Chad, Central African Republic, Bhutan, Afghanistan, Mali, Malawi, Eritrea, Haiti, Benin, Niger, Laos, Guinea, Cambodia, Mauritania, Liberia, Bangladesh, Georgia, Panama, Bulgaria
+
+#Logistic Growth for Developing Countries
+Logistic Growth for Bulgaria
+```{r}
+#Bulgaria
+ourfinaldata %>% filter(Country_Region == "Bulgaria") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("Bulgaria Cases and Deaths")
+
+num_days_Bulgaria = nrow(ourfinaldata %>% filter(Country_Region == "Bulgaria",Confirmed >3))
+Bulgaria_dat = ourfinaldata %>% filter(Country_Region == "Bulgaria",Confirmed >=1) %>% mutate("Num_Days_Since_Start"=c(1:num_days_Bulgaria))
+
+Bulgaria_mod = nls(Confirmed ~  c/(1+a*exp(b*Num_Days_Since_Start)), start = list(a=16.7, b = -0.1489, c = 788.76), data = Bulgaria_dat)
+coef(summary(Bulgaria_mod))
+
+```
+
+#Cambodia Logistic Growth
+```{r}
+ourfinaldata %>% filter(Country_Region == "Cambodia") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("Cambodia Cases and Deaths")
+
+num_days_Cambodia = nrow(ourfinaldata %>% filter(Country_Region == "Cambodia",Confirmed >=1))
+Cambodia_dat = ourfinaldata %>% filter(Country_Region == "Cambodia",Confirmed >=1) %>% mutate("Num_Days_Since_Start"=c(1:num_days_Cambodia))
+
+Cambodia_mod = nls(Confirmed ~  c/(1+a*exp(b*Num_Days_Since_Start)), start = list(a=16.7, b = -0.1, c = 140), data = Cambodia_dat)
+coef(summary(Cambodia_mod))
+
+plot(Cambodia_dat$Num_Days_Since_Start,Cambodia_dat$Confirmed,xlab = "Number of Days Since Start",ylab = "Number of Confirmed Cases",main = "Logistic Regression for Cambodia")
+curve(117.01/(1+1.656584e+08*exp(x*-0.345)), col = 4, add = TRUE)
+lines(Cambodia_dat$Num_Days_Since_Start, predict(Cambodia_mod), col = 2)
+```
+
+```{r}
+ourfinaldata %>% filter(Country_Region == "Panama" | Country_Region == "Norway"| Country_Region == "Georgia"|Country_Region == "Bangladesh"|Country_Region == "Guinea")%>% group_by(Date,Country_Region)%>% ggplot(mapping = aes(x = Date, y = Confirmed,color = Country_Region))+geom_line()+ggtitle("Confirmed Cases across the World")
+```
+
+#Junk
+```{r}
+ourfinaldata %>% filter(Country_Region == "Brazil") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle(" Cases and Deaths")
 ```
 
