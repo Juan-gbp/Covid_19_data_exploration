@@ -1,0 +1,89 @@
+---
+title: "New Analysis File"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(anchors)
+library(moderndive)
+```
+
+#Code to Set Up our CSV file
+The code in this chunk below sums up all the cases for countries that are broken into regions so we can have one value per row for those countries.  We had to do this for the US, China, and Australia.
+```{r}
+virus = read_csv("covid_19_clean_complete.csv")
+virus <- replace.value(virus,"Country_Region",from = "US",to = "United States") #Replacing value of US with value United States
+
+#US_virus is the data with the cruise ships filtered out and sums up all the cases in each county and combines them into a total number of cases grouped by date
+#No_US_virus is the data without the US and is just for all the other countries
+#country_virus is the final dataset grouped by country
+
+
+#US_virus = virus %>% filter(Country_Region == "US") %>% filter(Province_State != "Grand Princess Cruise Ship",Province_State != "Omaha, NE (From Diamond Princess)",Province_State != "Travis, CA (From Diamond Princess)",Province_State != "Lackland, TX (From Diamond Princess)",Province_State != "Unassigned Location (From Diamond Princess)") %>% group_by(Date) %>% summarize(Confirmed = sum(Confirmed),Deaths = sum(Deaths), Recovered = sum(Recovered)) %>% mutate("Province_State" = "US", "Country_Region" = "US") #OLD DATSET CODE; new dataset broken into cities and countries
+
+#Code for Second Version of Dataset until 3/25
+#US_virus = virus %>% filter(Country_Region == "United States")%>% group_by(Date) %>% separate(col = Province_State, into = c("City_or_County","State"),sep = ",") %>% filter(is.na(State)== T)%>% summarize(Confirmed = sum(Confirmed),Deaths = sum(Deaths), Recovered = sum(Recovered)) %>% mutate("Province_State" = "United States", "Country_Region" = "United States")
+US_virus = virus %>% filter(Country_Region == "United States")%>% group_by(Date) %>% separate(col = Province_State, into = c("City_or_County","State"),sep = ",") %>% filter(is.na(State)== T)%>% summarize(Confirmed = sum(Confirmed),Deaths = sum(Deaths)) %>% mutate("Province_State" = "United States", "Country_Region" = "United States")
+
+No_US_virus = virus %>% filter(Country_Region != "United States",Country_Region != "China",Country_Region != "Australia",Country_Region != "Canada")
+
+country_virus = full_join(No_US_virus, US_virus)
+country_virus %>% filter(Country_Region == "United States")
+
+#For China
+China_virus = virus %>% filter(Country_Region == "China") %>% group_by(Date) %>% summarize(Confirmed = sum(Confirmed),Deaths = sum(Deaths)) %>% mutate("Province_State" = "China", "Country_Region" = "China")
+No_China_virus = virus %>% filter(Country_Region != "China", Country_Region != "United States",Country_Region != "Australia",Country_Region != "Canada")
+country_virus1 = full_join(No_China_virus, China_virus)
+
+#For Canada
+Canada_virus = virus %>% filter(Country_Region == "Canada") %>% group_by(Date) %>% summarize(Confirmed = sum(Confirmed),Deaths = sum(Deaths)) %>% mutate("Province_State" = "Canada", "Country_Region" = "Canada")
+No_Canada_virus = virus %>% filter(Country_Region != "China", Country_Region != "United States",Country_Region != "Australia", Country_Region != "Canada")
+country_virus11 = full_join(No_Canada_virus, Canada_virus)
+
+#For Australia
+Australia_virus = virus %>% filter(Country_Region == "Australia")%>% group_by(Date) %>% summarize(Confirmed = sum(Confirmed),Deaths = sum(Deaths)) %>% mutate("Province_State" = "Australia", "Country_Region" = "Australia")
+No_Australia_virus = virus %>% filter(Country_Region != "Australia", Country_Region != "United States",Country_Region != "China", Country_Region != "Canada")
+country_virus2 = full_join(No_Australia_virus, Australia_virus)
+
+predata = full_join(country_virus,country_virus1)
+mydata = full_join(predata,country_virus2)
+mydata2 = full_join(mydata,country_virus11)
+#mydata2 %>% filter(Country_Region == "Canada")
+```
+
+```{r}
+mydata2
+#GDPandWeather = GDPandWeather %>% rename("Country_Region"= Country)
+GDPandWeather
+partialdata = left_join(mydata2,GDPandWeather,by = "Country_Region")
+country_population_2 = country_population_1 %>% rename("Country_Region"= Country)
+ourfinaldata = left_join(partialdata,country_population_2, by = "Country_Region")
+
+```
+
+Filter by the previous day to make sure we have the most recent data.
+```{r}
+ourfinaldata %>% filter(Country_Region == "United States")
+
+ourfinaldata
+poster = ourfinaldata %>% dplyr::select(-Province_State,-Recovered)
+```
+
+
+```{r}
+write_csv(ourfinaldata, "ourfinaldata.csv")
+library(lubridate)
+```
+
+
+```{r}
+#Formatting the variable date as mdy and ordering it
+ourfinaldata$Date <-as.Date(ourfinaldata$Date, format = "%m/%d/%y")
+
+ourfinaldata
+
+#Deaths in United States
+ourfinaldata %>% filter(Country_Region == "United States") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("United States Cases and Deaths")
+```
+
