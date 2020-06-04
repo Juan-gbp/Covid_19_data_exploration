@@ -225,7 +225,7 @@ Italy_mod = nls(Confirmed ~  c/(1+a*exp(b*Num_Days_Since_Start)), start = list(a
 coef(summary(Italy_mod))
 
 plot(Italy_dat$Num_Days_Since_Start,Italy_dat$Confirmed,xlab = "Number of Days Since Start",ylab = "Number of Confirmed Cases",main = "Logistic Regression for Italy")
-curve(2.094528e+05/(1+832.12*exp(x*-0.108)), col = "blue", add = TRUE)
+curve(2.145977e+05/(1+692.2*exp(x*-0.104)), col = "blue", add = TRUE)
 #lines(Italy_dat$Num_Days_Since_Start, predict(Italy_mod), col = 2)
 
 
@@ -237,8 +237,8 @@ num_days_USA = nrow(ourfinaldata %>% filter(Country_Region == "United States",Co
 USA_dat = ourfinaldata %>% filter(Country_Region == "United States",Confirmed >1) %>% mutate("Num_Days_Since_Start"=c(1:num_days_USA)) %>% arrange(Date)
 
 #Using Nonlinear Least Squares Logistic Growth Model
-USA_mod = nls(Confirmed ~  c/(1+a*exp(b*Num_Days_Since_Start)), start = list(a=30000.3, b = -0.10, c = max(USA_dat$Confirmed)), data = USA_dat)
-coef(summary(USA_mod))
+#USA_mod = nls(Confirmed ~  c/(1+a*exp(b*Num_Days_Since_Start)), start = list(a=30000.3, b = -0.10, c = max(USA_dat$Confirmed)), data = USA_dat)
+#coef(summary(USA_mod))
 ```
 
 #Logistic Growth for China
@@ -249,6 +249,10 @@ China_dat = ourfinaldata %>% filter(Country_Region == "China",Confirmed >3) %>% 
 #Using Nonlinear Least Squares Logistic Growth Model
 China_mod = nls(Confirmed ~  c/(1+a*exp(b*Num_Days_Since_Start)), start = list(a=65.29, b = -0.223, c = 83787), data = China_dat)
 coef(summary(China_mod))
+
+
+plot(China_dat$Num_Days_Since_Start,China_dat$Confirmed,xlab = "Number of Days Since Start",ylab = "Number of Confirmed Cases",main = "Logistic Regression for China")
+curve(77131.26/(1+479.15*exp(x*-0.480)), col = "blue", add = TRUE)
 ```
 
 #Logistic Growth for Spain
@@ -266,17 +270,18 @@ coef(summary(Spain_mod))
 ```{r}
 my_counties = read_csv("usa_county_wise.csv")
 my_counties$Date <-as.Date(my_counties$Date, format = "%m/%d/%y")
-my_counties %>% filter(Province_State == "Pennsylvania" & Date == "2020-04-19")
+my_counties %>% filter(Province_State == "Pennsylvania" & Date == "2020-06-03")
 
 my_counties %>% filter(Province_State == "Pennsylvania"|Province_State == "New York"|Province_State == "New Jersey"|Province_State == "Delaware"|Province_State == "California"|Province_State == "Michigan"|Province_State == "Louisiana") %>% group_by(Date,Province_State) %>% summarize(state_total = sum(Confirmed))%>% ggplot(mapping = aes(x = Date, y = state_total,color = Province_State))+geom_line()+ggtitle("Confirmed Cases across the States")
 
 
-my_counties %>% filter(Date == "2020-05-05") %>% group_by(Province_State) %>% summarize(state_total = sum(Confirmed)) %>% top_n(state_total,n=20) %>% arrange(desc(state_total))
-my_counties %>% filter(Date == "2020-05-05") %>% group_by(Province_State) %>% summarize(state_total = sum(Confirmed)) %>% top_n(state_total,n=-20) %>% arrange(desc(state_total))
+my_counties %>% filter(Date == "2020-06-03") %>% group_by(Province_State) %>% summarize(state_total = sum(Confirmed)) %>% top_n(state_total,n=20) %>% arrange(desc(state_total))
+my_counties %>% filter(Date == "2020-06-03") %>% group_by(Province_State) %>% summarize(state_total = sum(Confirmed)) %>% top_n(state_total,n=-20) %>% arrange(desc(state_total))
 
 
 my_counties %>% filter(Province_State == "Pennsylvania") %>%filter(Admin2 == "Lehigh"|Admin2  == "Northampton"|Admin2 == "Berks"|Admin2 == "Luzerne") %>% group_by(Admin2) %>% top_n(Confirmed,20)%>%ggplot(aes(x = Date,y = Confirmed,color = Admin2))+geom_line()
 
+my_counties %>% filter(Province_State == "Pennsylvania") %>% arrange(desc(Date))
 ```
 
 #Developing Countries
