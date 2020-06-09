@@ -112,6 +112,9 @@ ourfinaldata %>% filter(Country_Region == "Spain") %>% group_by(Date) %>%  ggplo
 
 #Deaths in Iran
 ourfinaldata %>% filter(Country_Region == "Iran") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("Iran Cases and Deaths")
+
+#Deaths in Sweeden
+ourfinaldata %>% filter(Country_Region == "Sweden") %>% group_by(Date) %>%  ggplot() + geom_line(aes(x = Date, y = Confirmed,group =1), linetype = "dashed")  + geom_line(aes(x = Date, y = Deaths,group =1), color = "red")+ ggtitle("Sweden Cases and Deaths")
 ```
 
 ```{r}
