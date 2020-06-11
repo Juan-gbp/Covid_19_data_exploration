@@ -72,8 +72,8 @@ Filter by the previous day to make sure we have the most recent data.
 ```{r}
 ourfinaldata %>% filter(Country_Region == "United States")
 
-ourfinaldata
-poster = ourfinaldata %>% dplyr::select(-Province_State,-Recovered)
+#ourfinaldata
+#poster = ourfinaldata %>% dplyr::select(-Province_State,-Recovered)
 ```
 
 
@@ -184,8 +184,8 @@ ourfinaldata %>% filter(Country_Region == "Norway") %>% group_by(Date) %>%  ggpl
 
 ```{r}
 #Comparison of Total Cases in each country
-ourfinaldata %>% filter(Country_Region == "United States"|Country_Region == "Italy"|Country_Region=="China"|Country_Region == "Spain"|Country_Region == "Iran"|Country_Region == "Australia"|Country_Region == "South Korea"|Country_Region == "Canada" ) %>% ggplot(mapping = aes(x=Date,y = Confirmed, color = Country_Region))+geom_line() +ggtitle("Total Confirmed Cases Over Time")
-ourfinaldata %>% filter(Country_Region == "United States"|Country_Region == "Italy"|Country_Region=="China"|Country_Region == "Spain"|Country_Region == "Iran"|Country_Region == "Australia"|Country_Region == "South Korea"|Country_Region == "Canada") %>% ggplot(mapping = aes(x=Date,y = Deaths, color = Country_Region))+geom_line() +ggtitle("Total Confirmed Deaths Over Time")
+ourfinaldata %>% filter(Country_Region == "United States"|Country_Region == "Italy"|Country_Region=="China"|Country_Region == "Spain"|Country_Region == "Iran"|Country_Region == "Australia"|Country_Region == "South Korea"|Country_Region == "Canada"|Country_Region == "Brazil" ) %>% ggplot(mapping = aes(x=Date,y = Confirmed, color = Country_Region))+geom_line() +ggtitle("Total Confirmed Cases Over Time")
+ourfinaldata %>% filter(Country_Region == "United States"|Country_Region == "Italy"|Country_Region=="China"|Country_Region == "Spain"|Country_Region == "Iran"|Country_Region == "Australia"|Country_Region == "South Korea"|Country_Region == "Canada"|Country_Region == "Brazil") %>% ggplot(mapping = aes(x=Date,y = Deaths, color = Country_Region))+geom_line() +ggtitle("Total Confirmed Deaths Over Time")
 ```
 
 
@@ -273,18 +273,18 @@ coef(summary(Spain_mod))
 ```{r}
 my_counties = read_csv("usa_county_wise.csv")
 my_counties$Date <-as.Date(my_counties$Date, format = "%m/%d/%y")
-my_counties %>% filter(Province_State == "Pennsylvania" & Date == "2020-06-03")
+my_counties %>% filter(Province_State == "Pennsylvania" & Date == "2020-06-10")
 
-my_counties %>% filter(Province_State == "Pennsylvania"|Province_State == "New York"|Province_State == "New Jersey"|Province_State == "Delaware"|Province_State == "California"|Province_State == "Michigan"|Province_State == "Louisiana") %>% group_by(Date,Province_State) %>% summarize(state_total = sum(Confirmed))%>% ggplot(mapping = aes(x = Date, y = state_total,color = Province_State))+geom_line()+ggtitle("Confirmed Cases across the States")
+my_counties %>% filter(Province_State == "Pennsylvania"|Province_State == "New York"|Province_State == "New Jersey"|Province_State == "Delaware"|Province_State == "California"|Province_State == "Michigan"|Province_State == "Arizona") %>% group_by(Date,Province_State) %>% summarize(state_total = sum(Confirmed))%>% ggplot(mapping = aes(x = Date, y = state_total,color = Province_State))+geom_line()+ggtitle("Confirmed Cases across the States")
 
 
-my_counties %>% filter(Date == "2020-06-03") %>% group_by(Province_State) %>% summarize(state_total = sum(Confirmed)) %>% top_n(state_total,n=20) %>% arrange(desc(state_total))
-my_counties %>% filter(Date == "2020-06-03") %>% group_by(Province_State) %>% summarize(state_total = sum(Confirmed)) %>% top_n(state_total,n=-20) %>% arrange(desc(state_total))
+my_counties %>% filter(Date == "2020-06-10") %>% group_by(Province_State) %>% summarize(state_total = sum(Confirmed)) %>% top_n(state_total,n=20) %>% arrange(desc(state_total))
+my_counties %>% filter(Date == "2020-06-10") %>% group_by(Province_State) %>% summarize(state_total = sum(Confirmed)) %>% top_n(state_total,n=-20) %>% arrange(desc(state_total))
 
 
 my_counties %>% filter(Province_State == "Pennsylvania") %>%filter(Admin2 == "Lehigh"|Admin2  == "Northampton"|Admin2 == "Berks"|Admin2 == "Luzerne") %>% group_by(Admin2) %>% top_n(Confirmed,20)%>%ggplot(aes(x = Date,y = Confirmed,color = Admin2))+geom_line()
 
-my_counties %>% filter(Province_State == "Pennsylvania") %>% arrange(desc(Date))
+my_counties %>% filter(Province_State == "Pennsylvania"& Date == "2020-06-10") %>% arrange(desc(Confirmed)) %>% mutate(DeathRate = Deaths/Confirmed)
 ```
 
 #Developing Countries
